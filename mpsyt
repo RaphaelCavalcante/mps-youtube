@@ -1485,8 +1485,6 @@ def playsong(song, failcount=0, override=False):
 
     try:
         cmd, songdata = generate_real_playerargs(song, override, failcount)
-        dbg("launching player with following command:")
-        dbg(cmd)
 
     except (HTTPError) as e:
 
@@ -1517,6 +1515,9 @@ def playsong(song, failcount=0, override=False):
 def launch_player(song, songdata, cmd):
     """ Launch player application. """
 
+    cmd = non_utf8_encode(cmd)
+    dbg("Calling player with the following command:")
+
     try:
 
         if "mplayer" in Config.PLAYER.get:
@@ -1525,6 +1526,7 @@ def launch_player(song, songdata, cmd):
             if mswin and sys.version_info[:2] < (3, 0):
                 cmd = [x.encode("utf8", errors="replace") for x in cmd]
 
+            dbg(cmd)
             p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT, bufsize=1)
             mplayer_status(p, songdata + ";", song.length)
@@ -1532,6 +1534,7 @@ def launch_player(song, songdata, cmd):
         else:
 
             with open(os.devnull, "w") as devnull:
+                dbg(cmd)
                 subprocess.call(cmd, stderr=devnull)
 
     except OSError:
