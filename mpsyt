@@ -1485,6 +1485,8 @@ def playsong(song, failcount=0, override=False):
 
     try:
         cmd, songdata = generate_real_playerargs(song, override, failcount)
+        dbg("launching player with following command:")
+        dbg(cmd)
 
     except (HTTPError) as e:
 
