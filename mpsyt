@@ -827,7 +827,11 @@ def import_config():
             saved_config = pickle.load(cf)
 
         for k, v in saved_config.items():
-            getattr(Config, k).value = v
+            try:
+                getattr(Config, k).value = v
+            except AttributeError:
+                # don't set unknown config items from future config files
+                pass
 
         # Update config files from versions <= 0.01.41
         if type(Config.PLAYERARGS.get) == list:
