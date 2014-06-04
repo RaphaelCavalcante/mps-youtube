@@ -1519,8 +1519,7 @@ def playsong(song, failcount=0, override=False):
 def launch_player(song, songdata, cmd):
     """ Launch player application. """
 
-    cmd = non_utf8_encode(cmd)
-    dbg("Calling player with the following command:")
+    dbg("Calling player with following command:")
 
     try:
 
@@ -1529,6 +1528,10 @@ def launch_player(song, songdata, cmd):
             # fix for github issue 59
             if mswin and sys.version_info[:2] < (3, 0):
                 cmd = [x.encode("utf8", errors="replace") for x in cmd]
+
+            elif not mswin and non_utf8:
+                dbg("(using ascii encoding)")
+                cmd = [x.encode("ascii", errors="replace") for x in cmd]
 
             dbg(cmd)
             p = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
